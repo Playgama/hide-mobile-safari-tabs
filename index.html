@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  />
+  <title>Mobile Safari Tabs Hider Demo</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family: system-ui, sans-serif;
+      background: canvas;
+      color: canvastext;
+    }
+
+    html.is-locked,
+    html.is-locked body {
+      overflow: hidden;
+      position: relative;
+      height: 100dvh;
+      overscroll-behavior: none;
+    }
+
+    .fullscreen-game {
+      position: fixed;
+      inset: 0;
+      height: 100dvh;
+      width: 100vw;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 12px env(safe-area-inset-right) 0 env(safe-area-inset-left);
+      z-index: 2147483647;
+      pointer-events: none;
+    }
+
+    .overlay.is-visible {
+      display: flex;
+    }
+
+    .bubble {
+      max-width: 80vw;
+      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.55);
+      color: #fff;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 13px;
+    }
+
+    .title {
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .spacer {
+      display: none;
+      width: 1px;
+      height: 400vh;
+    }
+
+    .spacer.is-visible {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<iframe
+  class="fullscreen-game"
+  src="https://playgama.com/export/game/fruit-merge-playgama"
+>
+</iframe>
+
+<div class="overlay">
+  <div class="bubble">
+    <div class="title">Maximize your play area</div>
+    <div>Scroll down a bit to hide the browser bars and enjoy the full screen</div>
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+<script>
+  const overlay = document.querySelector('.overlay');
+  const spacer = document.querySelector('.spacer');
+
+  let tabsOpen = false;
+  let rafId = null;
+
+  function measure() {
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+    }
+
+    rafId = requestAnimationFrame(() => {
+      const screenShort = Math.min(window.screen.width, window.screen.height);
+      const viewport = window.visualViewport;
+      const open = !!viewport && viewport.height + viewport.offsetTop < screenShort;
+
+      if (open === tabsOpen) {
+        return;
+      }
+
+      tabsOpen = open;
+
+      window.setTimeout(() => {
+        document.documentElement.classList.toggle('is-locked', !open);
+        overlay.classList.toggle('is-visible', open);
+        spacer.classList.toggle('is-visible', open);
+      }, open ? 0 : 100)
+    })
+  }
+
+  function init() {
+    if (!window.navigator.userAgent.match(/(iPhone|iPad|iPod)/)) {
+      return;
+    }
+
+    measure()
+
+    window.addEventListener('resize', measure, {passive: true});
+    window.addEventListener('orientationchange', measure, {passive: true});
+    window.addEventListener('scroll', measure, {passive: true});
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', measure, {passive: true});
+      window.visualViewport.addEventListener('scroll', measure, {passive: true});
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>
