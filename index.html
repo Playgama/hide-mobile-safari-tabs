@@ -49,6 +49,7 @@
       justify-content: center;
       padding: 12px env(safe-area-inset-right) 0 env(safe-area-inset-left);
       z-index: 2147483647;
+      pointer-events: none;
     }
 
     .overlay.is-visible {
@@ -58,16 +59,12 @@
     .bubble {
       max-width: 80vw;
       backdrop-filter: blur(8px);
-      background: rgba(0, 0, 0, 0.55);
+      background: rgba(0, 0, 0, 0.5);
       color: #fff;
-      border-radius: 12px;
-      padding: 16px 20px;
-      font-size: 13px;
-    }
-
-    .title {
-      font-weight: 700;
-      margin-bottom: 8px;
+      border-radius: 96px;
+      padding: 12px;
+      font-size: 14px;
+      pointer-events: auto;
     }
 
     .spacer {
@@ -90,8 +87,7 @@
 
 <div class="overlay">
   <div class="bubble">
-    <div class="title">Maximize your play area</div>
-    <div>Scroll down a bit to hide the browser bars and enjoy the full screen</div>
+    Scroll down a bit to hide the browser bars and enjoy the full screen
   </div>
 </div>
 
