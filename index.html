@@ -49,7 +49,6 @@
       justify-content: center;
       padding: 12px env(safe-area-inset-right) 0 env(safe-area-inset-left);
       z-index: 2147483647;
-      pointer-events: none;
     }
 
     .overlay.is-visible {
@@ -85,7 +84,7 @@
 <body>
 <iframe
   class="fullscreen-game"
-  src="https://playgama.com/export/game/fruit-merge-playgama"
+  src="https://playgama.com/export/game/ad-testing"
 >
 </iframe>
 
@@ -113,7 +112,9 @@
     rafId = requestAnimationFrame(() => {
       const screenShort = Math.min(window.screen.width, window.screen.height);
       const viewport = window.visualViewport;
-      const open = !!viewport && viewport.height + viewport.offsetTop < screenShort;
+
+      const MOBILE_CHROME_TOP_BAR_HEIGHT = 20; // In Chrome on iOS the top browser bar never fully hides
+      const open = !!viewport && viewport.height + viewport.offsetTop < screenShort - MOBILE_CHROME_TOP_BAR_HEIGHT;
 
       if (open === tabsOpen) {
         return;
@@ -125,8 +126,8 @@
         document.documentElement.classList.toggle('is-locked', !open);
         overlay.classList.toggle('is-visible', open);
         spacer.classList.toggle('is-visible', open);
-      }, open ? 0 : 100)
-    })
+      }, open ? 0 : 100);
+    });
   }
 
   function init() {
