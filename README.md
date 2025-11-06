@@ -7,7 +7,7 @@ The page locking approach used here is adapted from the technique described in t
 
 ## TL;DR
 This approach helps you **hide Safari tabs and the address bar** in iOS landscape mode, giving a **fullscreen-like** effect for web apps and games. It monitors visualViewport and locks the layout when the browser UI collapses. The repository does **not** ship a standalone script; see [index.html](https://github.com/Playgama/hide-mobile-safari-tabs/blob/main/index.html) for the minimal, copy‑paste example.
-- 📱 Works on Safari & Chrome for iOS
+- 📱 Works on Safari & Chrome for iOS (Safari 18 and 26.1+)
 - 🧠 Uses window.visualViewport
 
 ## Why not just use the Fullscreen API (iOS)?
