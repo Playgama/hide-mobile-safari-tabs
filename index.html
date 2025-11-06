@@ -10,6 +10,7 @@
   <style>
     :root {
       color-scheme: light dark;
+      --isl-vh: 1%;
     }
 
     * {
@@ -32,6 +33,53 @@
       position: relative;
       height: 100dvh;
       overscroll-behavior: none;
+    }
+
+    .holder {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: min(calc(var(--isl-vh) * 100), 100%);
+      overflow: hidden;
+      z-index: 2147483646;
+      display: none;
+    }
+
+    html.is-locked .holder {
+      display: block;
+    }
+
+    .scroller {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: none;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .scroller-inner {
+      display: flex;
+      justify-content: flex-start;
+      align-items: stretch;
+      flex-direction: column;
+      height: calc(100% + 1px);
+      min-height: calc(100% + 1px);
+    }
+
+    .content {
+      display: flex;
+      justify-content: flex-start;
+      align-items: stretch;
+      flex-direction: column;
+      position: sticky;
+      width: 100%;
+      height: calc(100% - 1px);
+      top: 0;
+      bottom: 0;
     }
 
     .fullscreen-game {
@@ -86,6 +134,14 @@
 >
 </iframe>
 
+<div class="holder">
+  <div class="scroller">
+    <div class="scroller-inner">
+      <div class="content"></div>
+    </div>
+  </div>
+</div>
+
 <div class="overlay">
   <div class="bubble">
     Scroll down a bit to hide the browser bars and enjoy the full screen
@@ -97,6 +153,8 @@
 <script>
   const overlay = document.querySelector('.overlay');
   const spacer = document.querySelector('.spacer');
+  const gameIframe = document.querySelector('.fullscreen-game');
+  const islContent = document.querySelector('.content');
 
   let tabsOpen = false;
   let rafId = null;
@@ -107,6 +165,8 @@
     }
 
     rafId = requestAnimationFrame(() => {
+      document.documentElement.style.setProperty('--isl-vh', (window.innerHeight * 0.01) + 'px');
+
       const screenShort = Math.min(window.screen.width, window.screen.height);
       const viewport = window.visualViewport;
 
@@ -123,6 +183,19 @@
         document.documentElement.classList.toggle('is-locked', !open);
         overlay.classList.toggle('is-visible', open);
         spacer.classList.toggle('is-visible', open);
+
+        if (!open) {
+          islContent.appendChild(gameIframe);
+        } else {
+          document.body.appendChild(gameIframe);
+        }
+
+        Object.assign(gameIframe.style, {
+          position: open ? 'fixed' : 'relative',
+          inset: open ? '0' : 'auto',
+          height: open ? '100dvh' : '100%',
+          width: open ? '100vw' : '100%',
+        });
       }, open ? 0 : 100);
     });
   }
@@ -132,15 +205,15 @@
       return;
     }
 
-    measure()
+    measure();
 
-    window.addEventListener('resize', measure, {passive: true});
-    window.addEventListener('orientationchange', measure, {passive: true});
-    window.addEventListener('scroll', measure, {passive: true});
+    window.addEventListener('resize', measure, { passive: true });
+    window.addEventListener('orientationchange', measure, { passive: true });
+    window.addEventListener('scroll', measure, { passive: true });
 
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', measure, {passive: true});
-      window.visualViewport.addEventListener('scroll', measure, {passive: true});
+      window.visualViewport.addEventListener('resize', measure, { passive: true });
+      window.visualViewport.addEventListener('scroll', measure, { passive: true });
     }
   }
 

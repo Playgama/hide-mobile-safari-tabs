@@ -1,6 +1,8 @@
 # Fullscreen API (iOS) — How to hide tabs in Safari
 Hide Mobile Safari tabs on iPhone to emulate fullscreen for web apps and games. A lightweight workaround using Visual Viewport instead of the standard Fullscreen API.
 
+The page locking approach used here is adapted from the technique described in the article [I fixed a decade-long iOS Safari problem](https://stripearmy.medium.com/i-fixed-a-decade-long-ios-safari-problem-0d85f76caec0).
+
 [Live demo](https://playgama.github.io/hide-mobile-safari-tabs/) · [Example index.html](https://github.com/Playgama/hide-mobile-safari-tabs/blob/main/index.html)
 
 ## TL;DR
